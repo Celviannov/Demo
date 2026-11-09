@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OurCare – Prototype</title>
+<style>
+:root{--bg:#f4f7f8;--card:#fff;--tx:#10201f;--mu:#52645f;--pr:#0f766e;--prt:#fff;--bd:#d3dedb;--em:#c62828;--ok:#1b7f3b;--hl:#ffe58a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1514;--card:#17211f;--tx:#eef6f4;--mu:#9bb0aa;--pr:#2dd4bf;--prt:#05211e;--bd:#2c3b38;--em:#ff6b6b;--ok:#5ee08a;--hl:#6b5a10}}
+:root[data-theme="dark"]{--bg:#0e1514;--card:#17211f;--tx:#eef6f4;--mu:#9bb0aa;--pr:#2dd4bf;--prt:#05211e;--bd:#2c3b38;--em:#ff6b6b;--ok:#5ee08a;--hl:#6b5a10}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:18px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.app{max-width:480px;margin:0 auto;padding:16px 16px 96px}
+h1{font-size:26px;margin:4px 0}h2{font-size:22px;margin:8px 0 4px}
+.sub{color:var(--mu);font-size:16px;margin:0 0 14px}
+.card{background:var(--card);border:2px solid var(--bd);border-radius:16px;padding:16px;margin:12px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+button{font:inherit;font-weight:600;border-radius:14px;border:2px solid var(--pr);background:var(--pr);color:var(--prt);padding:14px 16px;min-height:52px;cursor:pointer}
+button.ghost{background:transparent;color:var(--pr)}
+button.em{background:var(--em);border-color:var(--em);color:#fff}
+button:focus-visible,input:focus-visible{outline:3px solid var(--tx);outline-offset:2px}
+.tile{display:flex;flex-direction:column;gap:6px;align-items:flex-start;text-align:left;background:var(--card);color:var(--tx);border-color:var(--bd);min-height:120px}
+.tile span{font-size:30px}.tile small{font-weight:400;color:var(--mu);font-size:14px}
+.tile.em{background:var(--em);color:#fff;border-color:var(--em)}.tile.em small{color:#fff}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:2px solid var(--bd);display:flex;justify-content:center;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
+.nav div{display:flex;max-width:480px;width:100%;gap:4px}
+.nav button{flex:1;background:transparent;color:var(--mu);border:0;font-size:12px;padding:6px 2px;min-height:56px}
+.nav button.on{color:var(--pr)}.nav b{display:block;font-size:22px}
+.cam{position:relative;background:#000;border-radius:14px;overflow:hidden;aspect-ratio:4/3}
+.cam video,.cam canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.cam p{position:absolute;inset:0;margin:0;display:grid;place-items:center;color:#cfe;text-align:center;padding:16px;font-size:15px}
+.res{font-size:34px;font-weight:800;line-height:1.15;min-height:44px;margin:6px 0}
+.bar{height:12px;background:var(--bd);border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;background:var(--pr);width:0;transition:width .4s}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1}
+.tag{display:inline-block;font-size:13px;border:1px solid var(--bd);border-radius:20px;padding:2px 10px;color:var(--mu)}
+mark{background:var(--hl);color:var(--tx);border-radius:4px;padding:0 3px}
+.cap{font-size:24px;min-height:120px}.cap em{color:var(--mu)}
+.hist{list-style:none;margin:0;padding:0}.hist li{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd)}
+.big{position:fixed;inset:0;z-index:9;background:var(--em);color:#fff;display:none;place-items:center;text-align:center;padding:24px}
+.big.show{display:grid}.big h1{font-size:44px}.big button{background:#fff;color:var(--em);border-color:#fff}
+.note{font-size:14px;color:var(--mu)}
+input{font:inherit;width:100%;padding:12px;border-radius:12px;border:2px solid var(--bd);background:var(--bg);color:var(--tx)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="app">
+
+<section id="s-home">
+  <h1>OurCare</h1>
+  <p class="sub">Penerjemah dua arah BISINDO untuk kampus. Prototype demo: pengenalan isyarat masih disimulasikan.</p>
+  <div class="grid">
+    <button class="tile" data-go="sign"><span>🤟</span>Isyarat ke Teks<small>Kamera → teks &amp; suara</small></button>
+    <button class="tile" data-go="voice"><span>🎙️</span>Suara ke Teks<small>Caption langsung</small></button>
+    <button class="tile em" data-go="emg"><span>🚨</span>Frasa Darurat<small>Tanpa internet</small></button>
+    <button class="tile" data-go="learn"><span>📚</span>Belajar BISINDO<small>Tiru &amp; dapat skor</small></button>
+  </div>
+  <div class="card"><b>Cakupan awal: 40 frasa kampus</b><p class="note" style="margin:6px 0 0">Sapaan, akademik, fasilitas, administrasi, darurat, dan pertanyaan dasar. Video tidak dikirim ke server.</p></div>
+</section>
+
+<section id="s-sign" hidden>
+  <h2>Isyarat ke Teks</h2>
+  <p class="sub">Hadapkan tangan ke kamera, berhenti sejenak di antara frasa.</p>
+  <div class="cam"><video id="vid" playsinline muted></video><canvas id="cv"></canvas><p id="camMsg">Kamera belum aktif</p></div>
+  <div class="row" style="margin-top:10px"><button id="btnCam">Mulai kamera</button><button class="ghost" id="btnSim">Simulasikan isyarat</button></div>
+  <div class="card">
+    <span class="tag" id="cat">Hasil terjemahan</span>
+    <div class="res" id="res">–</div>
+    <div class="bar"><i id="conf"></i></div>
+    <p class="note" id="confTx">Keyakinan: –</p>
+    <div class="row"><button id="btnSpeak">🔊 Ucapkan</button><button class="ghost" id="btnSave">Simpan</button></div>
+  </div>
+  <div class="card"><b>Riwayat (lokal)</b><ul class="hist" id="hist"></ul><button class="ghost" id="btnClr" style="margin-top:8px;width:100%">Hapus riwayat</button></div>
+</section>
+
+<section id="s-voice" hidden>
+  <h2>Suara ke Teks</h2>
+  <p class="sub">Ucapan lawan bicara tampil sebagai caption. Kata kunci disorot.</p>
+  <div class="card cap" id="cap"><em>Tekan Mulai bicara…</em></div>
+  <div class="row"><button id="btnMic">🎙️ Mulai bicara</button><button class="ghost" id="btnNote">Simpan catatan</button></div>
+  <div class="card" id="typeBox" hidden><p class="note" style="margin-top:0">Peramban ini tidak mendukung pengenalan suara. Ketik untuk mensimulasikan:</p><input id="typed" placeholder="Contoh: Tugas dikumpulkan sebelum jadwal ujian"></div>
+  <div class="card"><b>Catatan kuliah</b><ul class="hist" id="notes"><li class="note">Belum ada catatan.</li></ul></div>
+</section>
+
+<section id="s-emg" hidden>
+  <h2>Frasa Darurat</h2>
+  <p class="sub">Tekan untuk menampilkan besar di layar, membacakan, dan menggetarkan perangkat.</p>
+  <div id="emgBtns" style="display:grid;gap:12px"></div>
+</section>
+
+<section id="s-learn" hidden>
+  <h2>Belajar BISINDO</h2>
+  <p class="sub">Tiru isyarat, lalu lihat skor kemiripan (simulasi).</p>
+  <div class="card">
+    <span class="tag" id="lcat"></span>
+    <div class="res" id="lph"></div>
+    <div class="cam" style="aspect-ratio:16/7"><p>Area peniruan isyarat (kamera)</p></div>
+    <div class="row" style="margin-top:10px"><button id="btnTry">Tiru isyarat</button><button class="ghost" id="btnNext">Frasa berikutnya</button></div>
+    <p style="font-size:28px;font-weight:800;margin:10px 0 0" id="lscore">–</p>
+    <p class="note" id="ladv">Skor kemiripan akan tampil di sini.</p>
+  </div>
+  <div class="card"><b>Progres modul</b><div class="bar" style="margin-top:8px"><i id="prog"></i></div><p class="note" id="progTx">0 dari 40 frasa dikuasai</p></div>
+</section>
+
+<div class="big" id="big" role="alert"><div><h1 id="bigTx"></h1><button id="bigX">Tutup</button></div></div>
+</div>
+
+<nav class="nav"><div>
+  <button data-go="home" class="on"><b>🏠</b>Beranda</button>
+  <button data-go="sign"><b>🤟</b>Isyarat</button>
+  <button data-go="voice"><b>🎙️</b>Suara</button>
+  <button data-go="emg"><b>🚨</b>Darurat</button>
+  <button data-go="learn"><b>📚</b>Belajar</button>
+</div></nav>
+
+<script>
+const P={Sapaan:["halo","selamat pagi","selamat siang","selamat sore","terima kasih","maaf","permisi","sama-sama"],Akademik:["kuliah","kelas","dosen","tugas","ujian","nilai","jadwal","tolong ulangi"],Fasilitas:["perpustakaan","toilet","kantin","laboratorium","klinik","parkir","ruang ibadah"],Administrasi:["kartu mahasiswa","surat","pembayaran","formulir","tanda tangan","kantor"],Darurat:["tolong","saya sakit","kebakaran","panggil dokter","saya butuh bantuan"],Pertanyaan:["di mana","kapan","berapa","siapa","bagaimana","apa"]};
+const ALL=Object.entries(P).flatMap(([c,a])=>a.map(p=>({c,p})));
+const $=id=>document.getElementById(id);
+const KEYS=["tugas","ujian","jadwal","nilai","kuliah","dosen","kelas","formulir","pembayaran","deadline","kumpul","kumpulkan"];
+
+// Navigasi
+function go(n){document.querySelectorAll("section").forEach(s=>s.hidden=s.id!=="s-"+n);document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("on",b.dataset.go===n));scrollTo(0,0)}
+document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
+
+// Suara keluar
+function say(t){try{const u=new SpeechSynthesisUtterance(t);u.lang="id-ID";speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+
+// Isyarat ke teks
+let stream=null,cur=null,raf=null,hist=[];
+try{hist=JSON.parse(localStorage.getItem("oc_hist")||"[]")}catch(e){}
+function drawHist(){const u=$("hist");u.innerHTML=hist.length?"":'<li class="note">Belum ada riwayat.</li>';hist.slice(-6).reverse().forEach(h=>{const l=document.createElement("li");l.innerHTML="<span></span><span class='note'></span>";l.children[0].textContent=h.p;l.children[1].textContent=h.t;u.appendChild(l)})}
+function save(){try{localStorage.setItem("oc_hist",JSON.stringify(hist))}catch(e){}}
+$("btnCam").onclick=async()=>{
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;$("vid").srcObject=null;cancelAnimationFrame(raf);$("camMsg").hidden=false;$("camMsg").textContent="Kamera belum aktif";$("btnCam").textContent="Mulai kamera";return}
+  try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}});$("vid").srcObject=stream;await $("vid").play();$("camMsg").hidden=true;$("btnCam").textContent="Matikan kamera";track()}
+  catch(e){$("camMsg").textContent="Kamera tidak tersedia atau izin ditolak. Gunakan tombol Simulasikan isyarat."}
+};
+function track(){ // titik tangan tiruan (placeholder MediaPipe)
+  const c=$("cv"),x=c.getContext("2d");c.width=320;c.height=240;
+  (function f(t){x.clearRect(0,0,320,240);x.fillStyle="#2dd4bf";
+    for(let i=0;i<21;i++){const a=i/21*Math.PI*1.2+Math.PI*.9,r=30+(i%5)*14;x.beginPath();x.arc(160+Math.cos(a)*r+Math.sin(t/300+i)*3,170+Math.sin(a)*r*1.2+Math.cos(t/260+i)*3,4,0,7);x.fill()}
+    raf=requestAnimationFrame(f)})(0)
+}
+$("btnSim").onclick=()=>{
+  const it=ALL[Math.floor(Math.random()*ALL.length)],k=Math.random()<.2?.45+Math.random()*.3:.82+Math.random()*.16;
+  $("conf").style.width=Math.round(k*100)+"%";$("confTx").textContent="Keyakinan: "+Math.round(k*100)+"% (minimal 80%)";
+  if(k<.8){cur=null;$("res").textContent="Mohon ulangi isyarat";$("cat").textContent="Keyakinan rendah";if(navigator.vibrate)navigator.vibrate([80,60,80])}
+  else{cur=it;$("res").textContent=it.p;$("cat").textContent=it.c;if(navigator.vibrate)navigator.vibrate(60)}
+};
+$("btnSpeak").onclick=()=>cur&&say(cur.p);
+$("btnSave").onclick=()=>{if(!cur)return;hist.push({p:cur.p,t:new Date().toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"})});save();drawHist()};
+$("btnClr").onclick=()=>{hist=[];save();drawHist()};
+drawHist();
+
+// Suara ke teks
+let rec=null,on=false,txt="",notes=[];
+const hl=s=>s.replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m])).replace(new RegExp("\\b("+KEYS.join("|")+")\\b","gi"),"<mark>$1</mark>");
+function setCap(f,i){$("cap").innerHTML=hl(f)+(i?" <em>"+hl(i)+"</em>":"")||"<em>Mendengarkan…</em>"}
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR)$("typeBox").hidden=false;
+$("typed").oninput=e=>{txt=e.target.value;setCap(txt,"")};
+$("btnMic").onclick=()=>{
+  if(!SR){$("typed").focus();return}
+  if(on){rec.stop();return}
+  rec=new SR();rec.lang="id-ID";rec.continuous=true;rec.interimResults=true;
+  rec.onresult=e=>{let f="",i="";for(let k=0;k<e.results.length;k++){(e.results[k].isFinal?(f+=e.results[k][0].transcript+" "):(i+=e.results[k][0].transcript))}txt=f+i;setCap(f,i)};
+  rec.onend=()=>{on=false;$("btnMic").textContent="🎙️ Mulai bicara"};
+  rec.onerror=()=>{on=false;$("btnMic").textContent="🎙️ Mulai bicara";$("typeBox").hidden=false};
+  try{rec.start();on=true;txt="";$("btnMic").textContent="⏹ Berhenti";setCap("","")}catch(e){$("typeBox").hidden=false}
+};
+$("btnNote").onclick=()=>{if(!txt.trim())return;notes.unshift(txt.trim());const u=$("notes");u.innerHTML="";notes.slice(0,5).forEach(n=>{const l=document.createElement("li");l.innerHTML=hl(n);u.appendChild(l)})};
+
+// Darurat
+["tolong","saya sakit","kebakaran","panggil dokter","saya butuh bantuan"].forEach(p=>{
+  const b=document.createElement("button");b.className="em";b.style.fontSize="26px";b.style.minHeight="84px";b.textContent=p[0].toUpperCase()+p.slice(1);
+  b.onclick=()=>{$("bigTx").textContent=b.textContent;$("big").classList.add("show");say(p);if(navigator.vibrate)navigator.vibrate([300,100,300,100,300])};
+  $("emgBtns").appendChild(b)});
+$("bigX").onclick=()=>{$("big").classList.remove("show");try{speechSynthesis.cancel()}catch(e){}};
+
+// Belajar
+let li=0,done=new Set();
+function showL(){const it=ALL[li];$("lcat").textContent=it.c;$("lph").textContent=it.p;$("lscore").textContent="–";$("ladv").textContent="Skor kemiripan akan tampil di sini."}
+$("btnTry").onclick=()=>{
+  const s=Math.round(50+Math.random()*48);$("lscore").textContent=s+"%";
+  $("ladv").textContent=s>=80?"Bagus! Gerakan sudah mirip dengan isyarat acuan.":s>=65?"Hampir tepat. Perhatikan posisi tangan dan arah gerakan.":"Coba lagi pelan-pelan, pastikan kedua tangan terlihat jelas.";
+  if(s>=80)done.add(li);$("prog").style.width=done.size/40*100+"%";$("progTx").textContent=done.size+" dari 40 frasa dikuasai"};
+$("btnNext").onclick=()=>{li=(li+1)%ALL.length;showL()};
+showL();
+</script>
+</body>
+</html>
